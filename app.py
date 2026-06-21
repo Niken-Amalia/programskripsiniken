@@ -379,27 +379,30 @@ if menu == "Deskripsi":
 # =========================
 # MENU PREDIKSI
 # =========================
+# =========================
+# MENU PREDIKSI
+# =========================
 elif menu == "Prediksi":
 
     st.title("Prediksi Penyakit Jantung")
-
+    st.write("Silakan masukkan data pasien kemudian klik tombol **Prediksi Penyakit Jantung**.")
 
     # =========================
     # INPUT USER
     # =========================
 
-    male = st.selectbox("Jenis Kelamin", [0,1])
+    sex = st.selectbox("Jenis Kelamin", [0, 1])
 
     age = st.number_input("Umur", 20, 100, 30)
 
     education = st.selectbox(
         "Education",
-        [1,2,3,4]
+        [1, 2, 3, 4]
     )
 
     currentSmoker = st.selectbox(
         "Current Smoker",
-        [0,1]
+        [0, 1]
     )
 
     cigsPerDay = st.number_input(
@@ -411,22 +414,22 @@ elif menu == "Prediksi":
 
     BPMeds = st.selectbox(
         "BP Meds",
-        [0,1]
+        [0, 1]
     )
 
     prevalentStroke = st.selectbox(
         "Prevalent Stroke",
-        [0,1]
+        [0, 1]
     )
 
     prevalentHyp = st.selectbox(
         "Prevalent Hypertension",
-        [0,1]
+        [0, 1]
     )
 
     diabetes = st.selectbox(
         "Diabetes",
-        [0,1]
+        [0, 1]
     )
 
     totChol = st.number_input(
@@ -472,86 +475,105 @@ elif menu == "Prediksi":
     )
 
     # =========================
-    # DATA INPUT
+    # TOMBOL PREDIKSI
     # =========================
 
-    input_data = pd.DataFrame({
-        'male': [male],
-        'age': [age],
-        'education': [education],
-        'currentSmoker': [currentSmoker],
-        'cigsPerDay': [cigsPerDay],
-        'BPMeds': [BPMeds],
-        'prevalentStroke': [prevalentStroke],
-        'prevalentHyp': [prevalentHyp],
-        'diabetes': [diabetes],
-        'totChol': [totChol],
-        'sysBP': [sysBP],
-        'diaBP': [diaBP],
-        'BMI': [BMI],
-        'heartRate': [heartRate],
-        'glucose': [glucose]
-    })
+    st.divider()
 
-    # =========================
-    # NORMALISASI
-    # =========================
-    # scaler dilatih dengan semua fitur
-    input_scaled = scaler.transform(input_data)
+    if st.button(
+        "🔍 Prediksi Penyakit Jantung",
+        use_container_width=True,
+        type="primary"
+    ):
 
-    # ubah ke dataframe lagi
-    input_scaled = pd.DataFrame(
-        input_scaled,
-        columns=input_data.columns
-    )
+        # =========================
+        # DATA INPUT
+        # =========================
 
-    # =========================
-    # AMBIL FITUR TERPILIH
-    # =========================
-    input_selected = input_scaled[selected_features]
+        input_data = pd.DataFrame({
+            'sex': [sex],
+            'age': [age],
+            'education': [education],
+            'currentSmoker': [currentSmoker],
+            'cigsPerDay': [cigsPerDay],
+            'BPMeds': [BPMeds],
+            'prevalentStroke': [prevalentStroke],
+            'prevalentHyp': [prevalentHyp],
+            'diabetes': [diabetes],
+            'totChol': [totChol],
+            'sysBP': [sysBP],
+            'diaBP': [diaBP],
+            'BMI': [BMI],
+            'heartRate': [heartRate],
+            'glucose': [glucose]
+        })
 
-    # =========================
-    # PREDIKSI
-    # =========================
+        # =========================
+        # NORMALISASI
+        # =========================
 
-    
-    # Prediksi model
-    prediction = model.predict(input_selected)
+        input_scaled = scaler.transform(input_data)
 
-    # =========================
-    # DATA INPUT USER
-    # =========================
-    st.subheader("1. Data Input Pengguna")
-    st.dataframe(input_data)
+        input_scaled = pd.DataFrame(
+            input_scaled,
+            columns=input_data.columns
+        )
 
-    # =========================
-    # HASIL NORMALISASI
-    # =========================
-    st.subheader("2. Hasil Normalisasi Min-Max")
+        # =========================
+        # SELEKSI FITUR
+        # =========================
 
-    # Membulatkan 4 angka di belakang koma
-    input_scaled_display = input_scaled.round(4)
+        input_selected = input_scaled[selected_features]
 
-    st.dataframe(input_scaled_display)
+        # =========================
+        # PREDIKSI
+        # =========================
 
-    # =========================
-    # HASIL SELEKSI FITUR
-    # =========================
-    st.subheader("3. Data Setelah Seleksi Fitur Information Gain")
+        prediction = model.predict(input_selected)
 
-    input_selected_display = input_selected.round(4)
+        # =========================
+        # DATA INPUT USER
+        # =========================
 
-    st.dataframe(input_selected_display)
+        st.subheader("1. Data Input Pengguna")
+        st.dataframe(input_data, use_container_width=True)
 
-    # =========================
-    # HASIL PREDIKSI
-    # =========================
-    st.subheader("4. Hasil Prediksi")
+        # =========================
+        # NORMALISASI
+        # =========================
 
-    if prediction[0] == 1:
-        st.error("🔴 Terindikasi Penyakit Jantung")
-    else:
-        st.success("🟢 Tidak Terindikasi Penyakit Jantung")
+        st.subheader("2. Hasil Normalisasi Min-Max")
+
+        input_scaled_display = input_scaled.round(4)
+
+        st.dataframe(
+            input_scaled_display,
+            use_container_width=True
+        )
+
+        # =========================
+        # SELEKSI FITUR
+        # =========================
+
+        st.subheader("3. Data Setelah Seleksi Fitur Information Gain")
+
+        input_selected_display = input_selected.round(4)
+
+        st.dataframe(
+            input_selected_display,
+            use_container_width=True
+        )
+
+        # =========================
+        # HASIL PREDIKSI
+        # =========================
+
+        st.subheader("4. Hasil Prediksi")
+
+        if prediction[0] == 1:
+            st.error("🔴 Pasien diprediksi **Terindikasi Resiko Penyakit Jantung**")
+        else:
+            st.success("🟢 Pasien diprediksi **Tidak Terindikasi Resiko Penyakit Jantung**")
 # COPYRIGHT
 # =========================
     st.markdown(
