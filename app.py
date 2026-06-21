@@ -1,6 +1,9 @@
 import streamlit as st
+st.write("Aplikasi berhasil dimulai")
 import pandas as pd
 import joblib
+st.write("Joblib berhasil diimport")
+st.write(joblib.__version__)
 import sys
 
 # =========================
