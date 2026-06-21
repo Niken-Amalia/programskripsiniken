@@ -391,7 +391,7 @@ elif menu == "Prediksi":
     # INPUT USER
     # =========================
 
-    Sex = st.selectbox("Jenis Kelamin", [0, 1])
+    sex = st.selectbox("Jenis Kelamin", [0, 1])
 
     age = st.number_input("Umur", 20, 100, 30)
 
@@ -491,7 +491,7 @@ elif menu == "Prediksi":
         # =========================
 
         input_data = pd.DataFrame({
-            'sex': [male],
+            'sex': [sex],
             'age': [age],
             'education': [education],
             'currentSmoker': [currentSmoker],
